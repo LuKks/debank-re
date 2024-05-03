@@ -4,10 +4,12 @@ let got = null
 const API_URL = 'https://api.debank.com'
 
 module.exports = class Debank {
-  constructor () {
+  constructor (opts = {}) {
     this.account = makeBrowserUID()
     this.nonce = new DebankNonce()
     this.signer = new DebankSigner()
+
+    this._options = opts
   }
 
   make (method, pathname, query) {
@@ -40,6 +42,7 @@ module.exports = class Debank {
     const headers = this.make(method, pathname, query)
 
     const response = await got(API_URL + pathname + query, {
+      ...this._options,
       method,
       // TODO: Investigate why fetch doesn't work for this case
       // Also, those headers are not needed for got-scraping
