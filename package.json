@@ -1,6 +1,6 @@
 {
   "name": "debank-re",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Debank reverse engineered API",
   "main": "index.js",
   "scripts": {
