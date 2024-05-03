@@ -1,0 +1,26 @@
+{
+  "name": "debank-re",
+  "version": "0.0.0",
+  "description": "Debank reverse engineered API",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && brittle test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukks/debank-re.git"
+  },
+  "author": "Lucas Barrena (LuKks)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukks/debank-re/issues"
+  },
+  "homepage": "https://github.com/lukks/debank-re#readme",
+  "devDependencies": {
+    "brittle": "^3.3.2",
+    "standard": "^17.1.0"
+  },
+  "dependencies": {
+    "got-scraping": "^4.0.5"
+  }
+}
