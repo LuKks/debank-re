@@ -42,6 +42,7 @@ module.exports = class Debank {
     const headers = this.make(method, pathname, query)
 
     const response = await got(API_URL + pathname + query, {
+      http2: false,
       ...this._options,
       method,
       // TODO: Investigate why fetch doesn't work for this case
