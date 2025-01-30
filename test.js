@@ -25,3 +25,14 @@ test('net curve 24h', async function (t) {
 
   t.ok(data.usd_value_list.length > 0)
 })
+
+test('multi query', async function (t) {
+  const debank = new Debank()
+
+  const data = await debank.get('/asset/total_net_curve', {
+    user_addr: '0x0000000000000000000000000000000000001000',
+    days: 1
+  })
+
+  t.ok(data.usd_value_list.length > 0)
+})
