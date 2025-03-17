@@ -30,10 +30,13 @@ module.exports = class Debank {
   async api (method, pathname, opts = {}) {
     if (!got) got = await importGot()
 
-    let query = opts.query // Very hackish atm until like-fetch does what got-scraping does
+    let query = opts.query
 
     if (query && typeof query === 'object') {
-      query = new URLSearchParams(opts.query).toString()
+      query = new URLSearchParams(opts.query)
+
+      // Must be reversed for valid signature
+      query = [...query.entries()].reverse().map(encodeParams).join('&')
     }
 
     method = method.toUpperCase()
@@ -45,8 +48,6 @@ module.exports = class Debank {
       http2: false,
       ...this._options,
       method,
-      // TODO: Investigate why fetch doesn't work for this case
-      // Also, those headers are not needed for got-scraping
       headers: {
         accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'accept-language': 'en-US',
@@ -173,4 +174,8 @@ class DebankSigner {
 
 function sha256 (data) {
   return crypto.createHash('sha256').update(data).digest()
+}
+
+function encodeParams ([k, v]) {
+  return encodeURIComponent(k) + '=' + encodeURIComponent(v)
 }
