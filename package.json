@@ -21,6 +21,6 @@
     "standard": "^17.1.0"
   },
   "dependencies": {
-    "got-scraping": "^4.0.5"
+    "impit": "^0.7.5"
   }
 }

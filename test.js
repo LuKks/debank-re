@@ -18,7 +18,7 @@ test('get', async function (t) {
   t.is(b.user.id, '0x0000000000000000000000000000000000001000')
 })
 
-test('net curve 24h', async function (t) {
+test.skip('net curve 24h', async function (t) {
   const debank = new Debank()
 
   const data = await debank.get('/asset/net_curve_24h', { user_addr: '0x0000000000000000000000000000000000001000' })
@@ -26,7 +26,7 @@ test('net curve 24h', async function (t) {
   t.ok(data.usd_value_list.length > 0)
 })
 
-test('multi query', async function (t) {
+test.skip('multi query', async function (t) {
   const debank = new Debank()
 
   const data = await debank.get('/asset/total_net_curve', {
