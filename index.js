@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-let got = null
+const { Impit } = require('impit')
 
 const API_URL = 'https://api.debank.com'
 
@@ -9,7 +9,7 @@ module.exports = class Debank {
     this.nonce = new DebankNonce()
     this.signer = new DebankSigner()
 
-    this._options = opts
+    this.impit = new Impit({ browser: 'chrome', proxyUrl: opts.proxyUrl })
   }
 
   make (method, pathname, query) {
@@ -28,8 +28,6 @@ module.exports = class Debank {
   }
 
   async api (method, pathname, opts = {}) {
-    if (!got) got = await importGot()
-
     let query = opts.query
 
     if (query && typeof query === 'object') {
@@ -44,34 +42,16 @@ module.exports = class Debank {
 
     const headers = this.make(method, pathname, query)
 
-    const response = await got(API_URL + pathname + query, {
-      http2: false,
-      ...this._options,
+    const response = await this.impit.fetch(API_URL + pathname + query, {
       method,
       headers: {
-        accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'accept-language': 'en-US',
-        'accept-encoding': 'gzip, deflate, br',
-
-        'sec-ch-ua': '"Not-A.Brand";v="99", "Chromium";v="124"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Linux"',
-
-        'sec-fetch-site': 'same-site',
-        'sec-fetch-mode': 'navigate',
-        'sec-fetch-user': '?1',
-        'sec-fetch-dest': 'document',
-
-        'upgrade-insecure-requests': '1',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-
         source: 'web',
         account: JSON.stringify(this.account),
         ...headers
       }
     })
 
-    const body = JSON.parse(response.body)
+    const body = await response.json()
 
     if (body.error_code) {
       throw new Error(body.error_code + ': ' + body.error_msg)
@@ -83,10 +63,6 @@ module.exports = class Debank {
   async get (pathname, query) {
     return this.api('GET', pathname, { query })
   }
-}
-
-async function importGot () {
-  return (await import('got-scraping')).gotScraping
 }
 
 function getTimestamp () {
