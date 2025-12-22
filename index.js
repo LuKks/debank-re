@@ -16,7 +16,7 @@ module.exports = class Debank {
     if (query && query[0] === '?') query = query.slice(1)
 
     const nonce = this.nonce.next()
-    const ts = getTimestamp()
+    const ts = Math.floor(Date.now() / 1000)
     const signature = this.signer.sign({ method, pathname, query }, { nonce, ts })
 
     return {
@@ -65,13 +65,9 @@ module.exports = class Debank {
   }
 }
 
-function getTimestamp () {
-  return Math.floor(Date.now() / 1e3)
-}
-
 function makeBrowserUID () {
   return {
-    random_at: Math.floor(Date.now() / 1e3),
+    random_at: Math.floor(Date.now() / 1000),
     random_id: uuidv4().replace(/-/g, ''),
     user_addr: null
   }
